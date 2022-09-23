@@ -17,15 +17,24 @@
 
 **example:**
 ```
+class B
+{
+int a;
+std::set<std::string> s;
+
+META_J(a,s); // <----------------add this to support auto serializtion
+};
+
 class A
 {
 int x;
 std::string y;
 std::vector<int> z;
 std::map<std::strng,int> m;
+B b;
 
-META_J(x,y,z,m); // <----------------add this to support auto serializtion
-}
+META_J(x,y,z,m,b); // <----------------add this to support auto serializtion
+};
 
 A a1;
 std::string json= a1.toJson();
