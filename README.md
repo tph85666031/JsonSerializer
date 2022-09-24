@@ -23,7 +23,7 @@ class B
 int a;
 std::set<std::string> s;
 
-META_J(a,s); // <----------------add this to support auto serializtion
+META_J(a,s); // <----------------add META_J to support auto serializtion
 };
 
 class A
@@ -33,13 +33,17 @@ std::string y;
 std::vector<int> z;
 std::map<std::strng,int> m;
 B b;
+std::set<B> list_b;
 
-META_J(x,y,z,m,b); // <----------------add this to support auto serializtion
+META_J(x,y,z,m,b,list_b); // <----------------add META_J to support auto serializtion
 };
 
-A a1;
-std::string json= a1.toJson();
+int main()
+{
+    A a1;
+    std::string json= a1.toJson();
 
-A a2;
-a2.fromJson(json.c_str());
+    A a2;
+    a2.fromJson(json.c_str());
+}
 ```
