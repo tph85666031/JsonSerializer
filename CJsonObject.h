@@ -354,7 +354,7 @@ public:     // method of ordinary json object
     bool Replace(const std::string& strKey, uint32_t uiValue);
     bool Replace(const std::string& strKey, int64_t llValue);
     bool Replace(const std::string& strKey, uint64_t ullValue);
-    bool Replace(const std::string& strKey, bool bValue, bool bValueAgain);
+    bool Replace(const std::string& strKey, const bool bValue);
     bool Replace(const std::string& strKey, float fValue);
     bool Replace(const std::string& strKey, double dValue);
     bool ReplaceWithNull(const std::string& strKey);    // replace value with null
@@ -381,6 +381,12 @@ public:     // method of ordinary json object
         return(Add(strKey, std::forward<T>(value)));
     }
 #endif
+    template<typename T, std::string (T::*)(bool) const = &T::toJson>
+    bool ReplaceAdd(const std::string& strKey, T& value)
+    {
+        CJsonObject json_sub(value.toJson());
+        return ReplaceAdd(strKey, json_sub);
+    }
 
 public:     // method of json array
     int GetArraySize() const;
@@ -395,6 +401,17 @@ public:     // method of json array
     bool Get(int iWhich, bool& bValue) const;
     bool Get(int iWhich, float& fValue) const;
     bool Get(int iWhich, double& dValue) const;
+    template<typename T, void (T::*)(const char*) = &T::fromJson>
+    bool Get(int iWhich, T& value) const
+    {
+        CJsonObject json_sub;
+        if(Get(iWhich, json_sub) == false)
+        {
+            return false;
+        }
+        value.fromJson(json_sub.ToString().c_str());
+        return true;
+    }
     int GetValueType(int iWhich) const;
     bool IsNull(int iWhich) const;
     bool Add(const CJsonObject& oJsonObject);
@@ -408,9 +425,15 @@ public:     // method of json array
     bool Add(uint32_t uiValue);
     bool Add(int64_t llValue);
     bool Add(uint64_t ullValue);
-    bool Add(int iAnywhere, bool bValue);
+    bool Add(const bool bValue);
     bool Add(float fValue);
     bool Add(double dValue);
+    template<typename T, std::string (T::*)(bool) const = &T::toJson>
+    bool Add(const T& value)
+    {
+        CJsonObject json_sub(value.toJson());
+        return Add(json_sub);
+    }
     bool AddNull();   // add a null value
     bool AddAsFirst(const CJsonObject& oJsonObject);
 #if __cplusplus < 201101L
@@ -423,9 +446,15 @@ public:     // method of json array
     bool AddAsFirst(uint32_t uiValue);
     bool AddAsFirst(int64_t llValue);
     bool AddAsFirst(uint64_t ullValue);
-    bool AddAsFirst(int iAnywhere, bool bValue);
+    bool AddAsFirst(const bool bValue);
     bool AddAsFirst(float fValue);
     bool AddAsFirst(double dValue);
+    template<typename T, std::string (T::*)(bool) const = &T::toJson>
+    bool AddAsFirst(const T& value)
+    {
+        CJsonObject json_sub(value.toJson());
+        return AddAsFirst(json_sub);
+    }
     bool AddNullAsFirst();     // add a null value
     bool Delete(int iWhich);
     bool Replace(int iWhich, const CJsonObject& oJsonObject);
@@ -439,10 +468,16 @@ public:     // method of json array
     bool Replace(int iWhich, uint32_t uiValue);
     bool Replace(int iWhich, int64_t llValue);
     bool Replace(int iWhich, uint64_t ullValue);
-    bool Replace(int iWhich, bool bValue, bool bValueAgain);
+    bool Replace(int iWhich, const bool bValue);
     bool Replace(int iWhich, float fValue);
     bool Replace(int iWhich, double dValue);
     bool ReplaceWithNull(int iWhich);      // replace with a null value
+    template<typename T, std::string (T::*)(bool) const = &T::toJson>
+    bool Replace(int iWhich, T& value)
+    {
+        CJsonObject json_sub(value.toJson());
+        return Replace(iWhich, json_sub);
+    }
 
 private:
     CJsonObject(cJSON* pJsonData);
