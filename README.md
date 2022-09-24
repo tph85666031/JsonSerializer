@@ -17,6 +17,7 @@
 
 **example:**
 ```
+#include "json_serializer.h"
 class B
 {
 int a;
