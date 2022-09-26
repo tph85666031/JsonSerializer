@@ -18,15 +18,15 @@
 **example:**
 ```
 #include "json_serializer.h"
-class B
+typedef struct
 {
 int a;
 std::set<std::string> s;
 
 META_J(a,s); // <----------------add META_J to support auto serializtion
-};
+}B;
 
-class A
+typedef struct
 {
 int x;
 std::string y;
@@ -36,7 +36,7 @@ B b;
 std::set<B> list_b;
 
 META_J(x,y,z,m,b,list_b); // <----------------add META_J to support auto serializtion
-};
+}A;
 
 int main()
 {
